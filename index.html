@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adopt a Cat</title>
+  <link rel="stylesheet" href="style.css?v=15">
+</head>
+<body>
+
+  <!-- ============ AUTH SCREEN ============ -->
+  <section id="auth-view" class="view">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <svg viewBox="0 0 64 64" width="72" height="72" aria-hidden="true">
+          <path d="M24 6l8 12 8-12-4 16h-8l-4-16z" fill="#f6a821"/>
+          <circle cx="28" cy="22" r="1.6" fill="#5a3a1a"/>
+          <circle cx="36" cy="22" r="1.6" fill="#5a3a1a"/>
+          <ellipse cx="32" cy="44" rx="18" ry="14" fill="#f6a821"/>
+          <path d="M14 44q-6 8-2 14q6-2 8-8z" fill="#f6a821"/>
+          <path d="M50 44q6 8 2 14q-6-2-8-8z" fill="#f6a821"/>
+          <path d="M24 46l4 4-2 6-4-4z" fill="#f6a821"/>
+          <path d="M40 46l-4 4 2 6 4-4z" fill="#f6a821"/>
+          <path d="M25 38q3 3 7 3t7-3" fill="none" stroke="#5a3a1a" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1>Adopt a Cat</h1>
+      <p class="auth-sub">Log in to find your new furry friend</p>
+
+      <div class="tabs">
+        <button id="tab-login" class="tab active">Login</button>
+        <button id="tab-register" class="tab">Register</button>
+      </div>
+
+      <form id="login-form" class="auth-form">
+        <label>Username
+          <input type="text" id="login-username" autocomplete="username" required>
+        </label>
+        <label>Password
+          <input type="password" id="login-password" autocomplete="current-password" required>
+        </label>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </form>
+
+      <form id="register-form" class="auth-form hidden">
+        <label>Username
+          <input type="text" id="reg-username" autocomplete="username" required>
+        </label>
+        <label>Password
+          <input type="password" id="reg-password" autocomplete="new-password" minlength="4" required>
+        </label>
+        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+      </form>
+
+      <p id="auth-error" class="error-msg"></p>
+
+      <p class="auth-admin-link">
+        <a href="admin.html">Admin login</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ MAIN APP ============ -->
+  <section id="app-view" class="view hidden">
+    <header class="topbar">
+      <div class="brand" id="brand-link" role="button" tabindex="0">Adopt a Cat</div>
+      <nav class="topnav">
+        <button class="nav-btn active" data-view="catalog">Home</button>
+        <button class="nav-btn" data-view="donation">Donation</button>
+        <button class="nav-btn" data-view="requests">My Requests</button>
+        <button class="nav-btn" data-view="about">About</button>
+        <button class="nav-btn" data-view="help">How to Use</button>
+      </nav>
+      <div class="userbox">
+        <div class="bell-wrap">
+          <button id="bell-btn" class="bell-btn" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.7 21a2 2 0 0 1-3.4 0"></path>
+            </svg>
+            <span id="bell-badge" class="bell-badge hidden">0</span>
+          </button>
+          <div id="notif-panel" class="notif-panel hidden">
+            <div class="notif-head">
+              <span>Notifications</span>
+              <button id="notif-mark-all" class="notif-mark-all">Mark all as read</button>
+            </div>
+            <div id="notif-list"></div>
+          </div>
+        </div>
+        <span id="user-name" class="user-name"></span>
+        <button id="logout-btn" class="btn btn-ghost">Log out</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- Catalog view -->
+      <div id="catalog-view" class="inner-view">
+        <div class="hero">
+          <div class="hero-decor paw paw-1" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><ellipse cx="32" cy="46" rx="17" ry="14" fill="currentColor"/><circle cx="21" cy="28" r="5.5" fill="currentColor"/><circle cx="43" cy="28" r="5.5" fill="currentColor"/><circle cx="14" cy="38" r="4.5" fill="currentColor"/><circle cx="50" cy="38" r="4.5" fill="currentColor"/></svg>
+          </div>
+          <div class="hero-decor paw paw-2" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><ellipse cx="32" cy="46" rx="17" ry="14" fill="currentColor"/><circle cx="21" cy="28" r="5.5" fill="currentColor"/><circle cx="43" cy="28" r="5.5" fill="currentColor"/><circle cx="14" cy="38" r="4.5" fill="currentColor"/><circle cx="50" cy="38" r="4.5" fill="currentColor"/></svg>
+          </div>
+          <div class="hero-text">
+            <span class="hero-eyebrow">Adopt a Cat</span>
+            <h2>Find your new <span class="grad-text">best friend</span></h2>
+            <p>Browse our cats, use the filters to find your perfect match, and give a cat the loving home it deserves.</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary btn-lg" onclick="window.scrollToFilters && window.scrollToFilters()">Browse cats</button>
+              <button class="btn btn-ghost btn-lg" onclick="window.switchView && window.switchView('help')">How to adopt</button>
+            </div>
+          </div>
+          <div class="hero-img">
+            <img src="images/cat5.jpg" alt="A friendly cat waiting for a home">
+            <span class="hero-badge"><strong id="hero-count">0</strong> cats waiting for you</span>
+          </div>
+        </div>
+
+        <div id="filters" class="filters">
+          <div class="filter">
+            <label for="filter-type">Type</label>
+            <select id="filter-type">
+              <option value="all">All types</option>
+            </select>
+          </div>
+          <div class="filter">
+            <label for="filter-colour">Colour</label>
+            <select id="filter-colour">
+              <option value="all">All colours</option>
+            </select>
+          </div>
+          <div class="filter">
+            <label for="filter-age">Age</label>
+            <select id="filter-age">
+              <option value="all">All ages</option>
+              <option value="kitten">Kitten (under 1 year)</option>
+              <option value="adult">Adult (1-7 years)</option>
+              <option value="senior">Senior (8+ years)</option>
+            </select>
+          </div>
+          <div class="filter">
+            <label for="filter-gender">Gender</label>
+            <select id="filter-gender">
+              <option value="all">All genders</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+          <button id="reset-filters" class="btn btn-ghost">Reset</button>
+        </div>
+
+        <div id="cat-list" class="cat-grid"></div>
+        <p id="no-results" class="no-results hidden">No cats match your filters. Try widening your search.</p>
+      </div>
+
+      <!-- Requests view -->
+      <div id="requests-view" class="inner-view hidden">
+        <div class="catalog-head">
+          <h2>My Adoption Requests</h2>
+          <p>Requests you have submitted for adoption.</p>
+        </div>
+        <div id="requests-list"></div>
+      </div>
+
+      <!-- About view -->
+      <div id="about-view" class="inner-view hidden">
+        <div class="hero page-hero">
+          <div class="hero-decor paw paw-1" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><ellipse cx="32" cy="46" rx="17" ry="14" fill="currentColor"/><circle cx="21" cy="28" r="5.5" fill="currentColor"/><circle cx="43" cy="28" r="5.5" fill="currentColor"/><circle cx="14" cy="38" r="4.5" fill="currentColor"/><circle cx="50" cy="38" r="4.5" fill="currentColor"/></svg>
+          </div>
+          <div class="hero-text">
+            <span class="hero-eyebrow">About us</span>
+            <h2>About <span class="grad-text">Adopt a Cat</span></h2>
+            <p>Together, we help cats find loving homes.</p>
+          </div>
+          <div class="hero-img">
+            <img src="images/cat2.jpg" alt="A cat enjoying a happy home">
+          </div>
+        </div>
+
+        <div class="info-content">
+          <div class="info-section with-img">
+            <div class="info-img"><img src="images/cat4.jpg" alt="A gentle Persian cat"></div>
+            <div class="info-body">
+              <h3>What is this website?</h3>
+              <p>
+                Adopt a Cat is a simple adoption platform that connects people who love cats
+                with cats who need a home. You can browse the cats we have available, learn
+                about their personality, and submit an adoption request directly from this page.
+              </p>
+              <p>
+                Every cat on this page has been carefully looked after and is ready to join a new family.
+              </p>
+            </div>
+          </div>
+
+          <div class="info-section with-img flip">
+            <div class="info-img"><img src="images/cat8.jpg" alt="A playful kitten"></div>
+            <div class="info-body">
+              <h3>Why adopt?</h3>
+              <p>
+                Every cat deserves a safe, loving home. When you adopt, you give a cat a second
+                chance at life and a family to grow old with. Adopting is a big commitment, but
+                it is one of the most rewarding things you can do.
+              </p>
+            </div>
+          </div>
+
+          <div class="info-section with-img">
+            <div class="info-img"><img src="images/cat15.jpg" alt="A fluffy cat"></div>
+            <div class="info-body">
+              <h3>What we promise</h3>
+              <ul>
+                <li>Healthy cats that have been checked and cared for.</li>
+                <li>Honest descriptions of every cat's personality.</li>
+                <li>Support after adoption to help you and your new cat settle in.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="info-section with-img flip">
+            <div class="info-img"><img src="images/cat9.jpg" alt="A cat resting in its new home"></div>
+            <div class="info-body">
+              <h3>After you adopt</h3>
+              <p>
+                Once your request is submitted, our team will review it and contact you to
+                confirm the adoption. We ask that you keep your new cat safe, feed it well,
+                and give it the care it needs for life.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How to use view -->
+      <div id="help-view" class="inner-view hidden">
+        <div class="hero page-hero">
+          <div class="hero-decor paw paw-1" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><ellipse cx="32" cy="46" rx="17" ry="14" fill="currentColor"/><circle cx="21" cy="28" r="5.5" fill="currentColor"/><circle cx="43" cy="28" r="5.5" fill="currentColor"/><circle cx="14" cy="38" r="4.5" fill="currentColor"/><circle cx="50" cy="38" r="4.5" fill="currentColor"/></svg>
+          </div>
+          <div class="hero-text">
+            <span class="hero-eyebrow">Step-by-step guide</span>
+            <h2>How to <span class="grad-text">Use</span></h2>
+            <p>A quick guide to adopting your new best friend.</p>
+          </div>
+          <div class="hero-img">
+            <img src="images/cat14.jpg" alt="A relaxed cat enjoying the sun">
+          </div>
+        </div>
+
+        <div class="info-content">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <div class="step-img"><img src="images/cat1.jpg" alt="Create an account"></div>
+            <div class="step-text">
+              <h3>Create an account</h3>
+              <p>
+                On the login screen, choose <strong>Register</strong>, enter a username and a
+                password (at least 4 characters), and create your account. Logging in is required
+                before you can adopt a cat.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <div class="step-img"><img src="images/cat3.jpg" alt="Browse the cats"></div>
+            <div class="step-text">
+              <h3>Browse the cats</h3>
+              <p>
+                Click the <strong>Home</strong> tab to see all available cats. Use the filters for
+                type, colour, age and gender to narrow down your search and find your perfect match.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <div class="step-img"><img src="images/cat6.jpg" alt="Choose a cat"></div>
+            <div class="step-text">
+              <h3>Choose a cat</h3>
+              <p>
+                Click the <strong>Adopt Me</strong> button on the cat you like. A form will open
+                with the cat's details.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num">4</div>
+            <div class="step-img"><img src="images/cat10.jpg" alt="Fill in the adoption form"></div>
+            <div class="step-text">
+              <h3>Fill in the adoption form</h3>
+              <p>
+                Fill in your name, phone number, email and address. Tell us why you want to adopt
+                the cat and whether you have other pets. Tick the box to confirm you agree to keep
+                the cat safe and care for it in the future.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num">5</div>
+            <div class="step-img"><img src="images/cat11.jpg" alt="Confirm your request"></div>
+            <div class="step-text">
+              <h3>Confirm your request</h3>
+              <p>
+                Press the <strong>Confirm Adoption Request</strong> button. Your request is saved
+                to our database and the team will contact you soon.
+              </p>
+            </div>
+          </div>
+
+          <div class="step-card">
+            <div class="step-num">6</div>
+            <div class="step-img"><img src="images/cat13.jpg" alt="Track your requests"></div>
+            <div class="step-text">
+              <h3>Track your requests</h3>
+              <p>
+                Open the <strong>My Requests</strong> tab to view every adoption request you have
+                submitted. Once a cat has been adopted, it is removed from the catalog.
+              </p>
+            </div>
+          </div>
+
+          <div class="info-section tip-section">
+            <h3>Tips</h3>
+            <ul>
+              <li>Take your time &mdash; choose a cat whose personality fits your home.</li>
+              <li>Fill the form honestly so we can match you with the right cat.</li>
+              <li>Prepare your home before your new cat arrives.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <!-- Donation view -->
+      <div id="donation-view" class="inner-view hidden">
+        <div class="hero page-hero">
+          <div class="hero-decor paw paw-1" aria-hidden="true">
+            <svg viewBox="0 0 64 64"><ellipse cx="32" cy="46" rx="17" ry="14" fill="currentColor"/><circle cx="21" cy="28" r="5.5" fill="currentColor"/><circle cx="43" cy="28" r="5.5" fill="currentColor"/><circle cx="14" cy="38" r="4.5" fill="currentColor"/><circle cx="50" cy="38" r="4.5" fill="currentColor"/></svg>
+          </div>
+          <div class="hero-text">
+            <span class="hero-eyebrow">Support the shelter</span>
+            <h2>Care for your <span class="grad-text">virtual pet</span></h2>
+            <p>Feed it, give it water, and keep it healthy. Every item you buy is a donation that also helps real shelter cats.</p>
+          </div>
+          <div class="hero-img">
+            <img src="images/cat6.jpg" alt="A friendly cat">
+          </div>
+        </div>
+
+        <div class="donation-grid">
+          <div class="don-card pet-card">
+            <div class="pet-avatar-wrap">
+              <div id="pet-avatar" class="pet-avatar"></div>
+              <div id="pet-dead" class="pet-dead hidden">
+                <div class="pet-dead-emoji">R.I.P</div>
+                <p>Your pet has passed away.</p>
+                <button id="revive-btn" class="btn btn-primary">Adopt a new pet</button>
+              </div>
+            </div>
+            <div class="pet-name-row">
+              <div>
+                <h3 id="pet-name">Your pet</h3>
+                <div id="pet-status" class="pet-status">Happy and healthy</div>
+              </div>
+              <div class="pet-money">Balance: <strong>$<span id="pet-money">0</span></strong></div>
+            </div>
+
+            <div class="stat-row">
+              <span class="stat-label">Health</span>
+              <div class="bar"><div id="bar-health" class="fill fill-health"></div></div>
+              <span id="health-num" class="stat-num">100</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Hunger</span>
+              <div class="bar"><div id="bar-hunger" class="fill fill-hunger"></div></div>
+              <span id="hunger-num" class="stat-num">100</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">Thirst</span>
+              <div class="bar"><div id="bar-thirst" class="fill fill-thirst"></div></div>
+              <span id="thirst-num" class="stat-num">100</span>
+            </div>
+          </div>
+
+          <div class="don-card">
+            <h3>Shop</h3>
+            <p class="don-sub">Buy supplies with your balance. Items go straight to your inventory.</p>
+            <button class="shop-item" data-item="food">
+              <span class="shop-icon food-ic"></span>
+              <span class="shop-info"><strong>Food</strong><em>+30 hunger</em></span>
+              <span class="shop-price">$10</span>
+            </button>
+            <button class="shop-item" data-item="water">
+              <span class="shop-icon water-ic"></span>
+              <span class="shop-info"><strong>Water</strong><em>+30 thirst</em></span>
+              <span class="shop-price">$10</span>
+            </button>
+            <button class="shop-item" data-item="potion">
+              <span class="shop-icon potion-ic"></span>
+              <span class="shop-info"><strong>Health Potion</strong><em>+50 health</em></span>
+              <span class="shop-price">$20</span>
+            </button>
+          </div>
+
+          <div class="don-card">
+            <h3>Inventory</h3>
+            <p class="don-sub">Use stored items when your pet needs them.</p>
+            <div id="inventory-list" class="inventory-list"></div>
+          </div>
+
+          <div class="don-card topup-card">
+            <h3>Top Up Balance</h3>
+            <p class="don-sub">Add money to your balance using your bank account.</p>
+            <button id="open-topup-btn" class="btn btn-primary btn-block">Top Up Balance</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <!-- ============ ADOPTION FORM MODAL ============ -->
+  <div id="adopt-modal" class="modal hidden">
+    <div class="modal-box">
+      <button id="modal-close" class="modal-close" aria-label="Close">&times;</button>
+      <h2>Adopt <span id="adopt-cat-name"></span></h2>
+      <p class="modal-sub" id="adopt-cat-detail"></p>
+
+      <form id="adopt-form">
+        <div class="form-row">
+          <label>Full Name
+            <input type="text" id="adopt-fullname" required>
+          </label>
+          <label>Phone Number
+            <input type="tel" id="adopt-phone" required>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Email
+            <input type="email" id="adopt-email" required>
+          </label>
+          <label>Home Address
+            <input type="text" id="adopt-address" required>
+          </label>
+        </div>
+        <label>Why do you want to adopt this cat?
+          <textarea id="adopt-reason" rows="3" required></textarea>
+        </label>
+        <label>Do you have other pets at home?
+          <select id="adopt-pets" required>
+            <option value="">Please choose...</option>
+            <option value="none">No other pets</option>
+            <option value="cat">Yes, another cat</option>
+            <option value="dog">Yes, a dog</option>
+            <option value="other">Yes, other animals</option>
+          </select>
+        </label>
+        <label class="agree-box">
+          <input type="checkbox" id="adopt-agree" required>
+          <span>
+            I agree to adopt <strong id="adopt-agree-cat"></strong> and promise to
+            keep it safe, feed it, give it a loving home, and take care of it in the future.
+          </span>
+        </label>
+
+        <button type="submit" id="confirm-btn" class="btn btn-primary btn-block">Confirm Adoption Request</button>
+      </form>
+      <p id="adopt-error" class="error-msg"></p>
+    </div>
+  </div>
+
+  <!-- ============ TOP-UP MODAL ============ -->
+  <div id="topup-modal" class="modal hidden">
+    <div class="modal-box">
+      <button id="topup-close" class="modal-close" aria-label="Close">&times;</button>
+      <h2>Top Up Balance</h2>
+      <p class="modal-sub">Add money to your balance using your bank account.</p>
+
+      <form id="topup-form">
+        <div class="form-row">
+          <label>Bank Account
+            <input type="text" id="topup-bank" autocomplete="off" required>
+          </label>
+          <label>Bank Name
+            <input type="text" id="topup-bankname" autocomplete="off" required>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Top Up Amount ($)
+            <input type="number" id="topup-amount" min="1" step="1" required>
+          </label>
+          <label>Confirm Amount ($)
+            <input type="number" id="topup-confirm" min="1" step="1" required>
+          </label>
+        </div>
+        <label>Confirmation
+          <select id="topup-confirmtick" required>
+            <option value="">Please select...</option>
+            <option value="yes">Yes, I confirm the top-up details are correct</option>
+            <option value="no">No, I do not confirm</option>
+          </select>
+        </label>
+        <button type="submit" class="btn btn-primary btn-block">Top Up</button>
+      </form>
+      <p id="topup-error" class="error-msg"></p>
+    </div>
+  </div>
+
+  <!-- ============ SUCCESS MODAL ============ -->
+  <div id="success-modal" class="modal hidden">
+    <div class="modal-box success-box">
+      <h2>Thank you!</h2>
+      <p>Your adoption request for <strong id="success-cat"></strong> has been saved.</p>
+      <p>Our team will contact you soon to confirm.</p>
+      <button id="success-close" class="btn btn-primary">OK</button>
+    </div>
+  </div>
+
+  <!-- ============ TOAST ============ -->
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="app.js?v=15"></script>
+</body>
+</html>

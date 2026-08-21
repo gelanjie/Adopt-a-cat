@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin- Adopt a Cat Database</title>
+  <link rel="stylesheet" href="style.css?v=13">
+  <style>
+    .admin-wrap { max-width: 1100px; margin: 0 auto; padding: 28px 24px 60px; }
+
+    .admin-login-card {
+      max-width: 400px;
+      margin: 60px auto;
+      background: var(--card);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 34px 30px;
+      text-align: center;
+    }
+
+    .admin-login-card h1 { font-size: 24px; color: var(--orange-dark); }
+    .admin-login-card p { color: var(--muted); margin: 8px 0 20px; }
+
+    .admin-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .admin-top h1 { font-size: 24px; }
+
+    .stat-cards {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      flex: 1;
+      background: var(--card);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .stat-card .num { font-size: 30px; font-weight: 800; color: var(--orange-dark); }
+    .stat-card .lbl { color: var(--muted); font-size: 13px; }
+
+    .admin-section { margin-bottom: 30px; }
+    .admin-section h2 { font-size: 19px; margin-bottom: 12px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      font-size: 13px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      background: #f6ecdb;
+      color: #8a6a2f;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .del-btn {
+      border: none;
+      background: #fdeaea;
+      color: var(--red);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .del-btn:hover { background: #f8d7d7; }
+
+    .admin-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: #eef6e9;
+      color: var(--green);
+    }
+
+    .table-scroll { overflow-x: auto; border-radius: 14px; }
+
+    .back-link { display: inline-block; margin-bottom: 18px; color: var(--muted); text-decoration: none; }
+    .back-link:hover { color: var(--orange-dark); }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .cat-thumb {
+      width: 70px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #f6ecdb;
+    }
+
+    .upload-box {
+      border: 2px dashed var(--line);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      cursor: pointer;
+      background: #fdfaf3;
+      margin-bottom: 4px;
+    }
+
+    .upload-box:hover { border-color: var(--orange); }
+    .upload-box input { display: none; }
+    .upload-box span { color: var(--muted); font-size: 13px; font-weight: 500; }
+    .upload-box img {
+      display: block;
+      margin: 0 auto;
+      max-height: 160px;
+      border-radius: 10px;
+    }
+
+    .stat-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+    tbody tr { transition: background 0.15s ease; }
+    tbody tr:hover { background: #fff8ec; }
+    .del-btn { transition: background 0.15s, transform 0.15s; }
+    .cancel-btn { background: #fff4df; color: var(--orange-deep); }
+    .cancel-btn:hover { background: #ffe6c0; }
+    .edit-btn { background: #e7f1ff; color: #2563eb; margin-right: 6px; }
+    .edit-btn:hover { background: #d4e6ff; }
+    .send-btn { background: #e7f7ec; color: var(--green); margin-right: 6px; }
+    .send-btn:hover { background: #d2efdb; }
+    .del-btn:active { transform: scale(0.95); }
+    #add-cat-btn { background: var(--grad); box-shadow: 0 6px 18px rgba(224, 96, 42, 0.35); }
+    .cat-thumb { transition: transform 0.2s; }
+    .cat-thumb:hover { transform: scale(1.8); transform-origin: center; }
+    .admin-wrap { animation: viewIn 0.3s ease both; }
+
+    @media (max-width: 640px) {
+      .stat-cards { flex-direction: column; }
+      .admin-top { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Admin login -->
+  <section id="admin-login-view" class="view">
+    <div class="admin-login-card">
+      <h1>Admin Login</h1>
+      <p>Enter the admin password to view the full database.</p>
+      <form id="admin-login-form" class="auth-form">
+        <label>Password
+          <input type="password" id="admin-password" required>
+        </label>
+        <button type="submit" class="btn btn-primary btn-block">Login</button>
+      </form>
+      <p id="admin-error" class="error-msg"></p>
+      <p class="auth-admin-link"><a href="index.html">&larr; Back to Adopt a Cat</a></p>
+    </div>
+  </section>
+
+  <!-- Admin dashboard -->
+  <section id="admin-dash-view" class="view hidden">
+    <div class="admin-wrap">
+      <div class="admin-top">
+        <h1>Adopt a Cat - Database</h1>
+        <div>
+          <button id="admin-refresh" class="btn btn-ghost">Refresh</button>
+          <button id="admin-logout" class="btn btn-ghost">Log out</button>
+        </div>
+      </div>
+
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="num" id="stat-requests">0</div>
+          <div class="lbl">Adoption requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="stat-users">0</div>
+          <div class="lbl">Registered users</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="stat-cats">16</div>
+          <div class="lbl">Cats available</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="stat-donations">0</div>
+          <div class="lbl">Donations</div>
+        </div>
+        <div class="stat-card">
+          <div class="num" id="stat-donated">$0</div>
+          <div class="lbl">Total donated</div>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="section-head">
+          <h2>Donations</h2>
+        </div>
+        <div class="table-scroll">
+          <table id="donations-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Password</th>
+                <th>Amount</th>
+                <th>Bank Name</th>
+                <th>Bank Account</th>
+                <th>Date</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="donations-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <div class="section-head">
+          <h2>Manage Cats</h2>
+          <button id="add-cat-btn" class="btn btn-primary">+ Add Cat</button>
+        </div>
+        <div class="table-scroll">
+          <table id="cats-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Photo</th>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Colour</th>
+                <th>Age</th>
+                <th>Gender</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="cats-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <h2>All Adoption Requests</h2>
+        <div class="table-scroll">
+          <table id="requests-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>User</th>
+                <th>Cat</th>
+                <th>Applicant</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Reason</th>
+                <th>Other pets</th>
+                <th>Status</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="requests-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="admin-section">
+        <h2>Registered Users</h2>
+        <div class="table-scroll">
+          <table id="users-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Password</th>
+                <th>Created</th>
+              </tr>
+            </thead>
+            <tbody id="users-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Add cat modal -->
+  <div id="add-cat-modal" class="modal hidden">
+    <div class="modal-box">
+      <button id="add-cat-close" class="modal-close" aria-label="Close">&times;</button>
+      <h2>Add a Cat</h2>
+      <p class="modal-sub">Upload a photo and fill in the cat's details.</p>
+
+      <form id="add-cat-form">
+        <label class="upload-box">
+          <input type="file" id="cat-photo" accept="image/*" required>
+          <span id="cat-photo-label">Click to upload a photo of the cat</span>
+          <img id="cat-photo-preview" class="hidden" alt="Preview">
+        </label>
+
+        <div class="form-row">
+          <label>Name
+            <input type="text" id="cat-name" required>
+          </label>
+          <label>Type (breed)
+            <input type="text" id="cat-type" required>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Colour
+            <input type="text" id="cat-colour" required>
+          </label>
+          <label>Age (years)
+            <input type="number" id="cat-age" min="0" max="30" required>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Gender
+            <select id="cat-gender" required>
+              <option value="">Please choose...</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </label>
+        </div>
+        <label>Description
+          <textarea id="cat-about" rows="3" required></textarea>
+        </label>
+
+        <button type="submit" class="btn btn-primary btn-block">Add Cat</button>
+      </form>
+      <p id="add-cat-error" class="error-msg"></p>
+    </div>
+  </div>
+
+  <!-- Edit cat modal -->
+  <div id="edit-cat-modal" class="modal hidden">
+    <div class="modal-box">
+      <button id="edit-cat-close" class="modal-close" aria-label="Close">&times;</button>
+      <h2>Edit Cat</h2>
+      <p class="modal-sub">Update the cat's details and introduction.</p>
+
+      <form id="edit-cat-form">
+        <input type="hidden" id="edit-cat-id">
+
+        <label class="upload-box">
+          <input type="file" id="edit-cat-photo" accept="image/*">
+          <span id="edit-cat-photo-label">Click to upload a new photo (optional)</span>
+          <img id="edit-cat-photo-preview" class="hidden" alt="Preview">
+        </label>
+
+        <div class="form-row">
+          <label>Name
+            <input type="text" id="edit-cat-name" required>
+          </label>
+          <label>Type (breed)
+            <input type="text" id="edit-cat-type" required>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Colour
+            <input type="text" id="edit-cat-colour" required>
+          </label>
+          <label>Age (years)
+            <input type="number" id="edit-cat-age" min="0" max="30" required>
+          </label>
+        </div>
+        <div class="form-row">
+          <label>Gender
+            <select id="edit-cat-gender" required>
+              <option value="">Please choose...</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </label>
+        </div>
+        <label>Introduction / Description
+          <textarea id="edit-cat-about" rows="3" required></textarea>
+        </label>
+
+        <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
+      </form>
+      <p id="edit-cat-error" class="error-msg"></p>
+    </div>
+  </div>
+
+  <script src="admin.js?v=13"></script>
+</body>
+</html>
